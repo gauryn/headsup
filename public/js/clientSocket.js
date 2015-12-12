@@ -54,6 +54,7 @@ socket.on('connect', function(){
 		$('#countdownTimer').show();
 		$('#cardPass').show();
 		$('#cardSuccess').show();
+		$('#endGameBtn').show();
 		//game score info: update score display
 		$('#scoreTracker').html("Score: 0");
 		return false;
@@ -101,6 +102,11 @@ socket.on('connect', function(){
 		socket.emit('cardStatus', {'index': index});
 		return false;
 	}
+
+	//end game button
+	$('#endGameBtn').on('click', function(){
+		socket.emit('endGame');
+	})
 	
 	//end game
 	socket.on('gameOver', function(data){

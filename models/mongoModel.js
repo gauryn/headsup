@@ -1,6 +1,6 @@
 var mongoClient = require('mongodb').MongoClient;
 
-var connection_string = 'localhost:27017/headsup';
+var connection_string = '127.0.0.1:27017/headsup';
 if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
   connection_string = process.env.OPENSHIFT_MONGODB_DB_USERNAME + ":" +
   process.env.OPENSHIFT_MONGODB_DB_PASSWORD + "@" +
@@ -8,6 +8,9 @@ if(process.env.OPENSHIFT_MONGODB_DB_PASSWORD){
   process.env.OPENSHIFT_MONGODB_DB_PORT + '/' +
   process.env.OPENSHIFT_APP_NAME;
 }
+console.log("Connection String: "+connection_string);
+console.log("Password: "+process.env.OPENSHIFT_MONGODB_DB_USERNAME);
+
 // Global variable of the connected database
 var mongoDB; 
 
@@ -20,6 +23,9 @@ mongoClient.connect('mongodb://'+connection_string, function(err, db) {
 
 //********** CRUD Create -> Mongo insert ***************************************
 exports.create = function(collection, data, callback) {
+  console.log("Collection: "+collection);
+  console.log("Db: "+mongoDB);
+
   mongoDB.collection(collection).insertOne(
     data,                     // the object to be inserted
     function(err, status) {   // callback upon completion

@@ -50,7 +50,7 @@ exports.init = function(io){
 				gameOver = true;
 			}
 		});
-		//score tracket
+		//score tracker
 		socket.on('scoreStatus', function(data){
 			totalScore=data.totalScore;
 			console.log("Total Score on server side: "+totalScore);
@@ -66,9 +66,15 @@ exports.init = function(io){
 
 		//4. game over: called by timer
 		//send player name, score, remaining time, number of correct/ wrong, time reamining, highest score for that category & db updates
+		socket.on('endGame', function(){
+			endGame();
+		})
 		function endGame(){
 			//find highest score
-			
+			var url = "/topScores?category="+category;
+			$.get(url, function(data){
+				console.log("Data: "+data);
+			})
 			//number of correct/ wrong
 			numRight = totalScore/s.scoreSuccess;
 			numWrong = category.cards.length - numRight;
