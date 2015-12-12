@@ -1,6 +1,6 @@
 $(function() {});
 
-var socket = io.connect();
+var socket = io.connect('http://headsup-67328gauryn.rhcloud.com/');
 
 socket.on('connect', function(){
 
@@ -150,7 +150,7 @@ socket.on('connect', function(){
 			else if(response[0].score >= data.totalScore){
 				msg+="Didn't beat current high score: "+response[0].score+"<br>";
 			}
-			
+
 			//update game over details
 			msg+= "Player Name: "+data.playerName+"<br>"+
 			      "Category: "+data.category.name+"<br>"+
