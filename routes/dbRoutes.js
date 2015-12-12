@@ -19,7 +19,8 @@ doCreate = function(req, res){
 	                    req.body,
 		                  function(result) {
   		                  var success = (result ? "Create successful" : "Create unsuccessful");
-                        res.send(req.body);
+                        console.log("Result: "+result);
+                        res.send(result);
 	  	                  // res.render('message', {title: 'Mongo Demo', obj: success});
 		                  });
 };
@@ -36,7 +37,8 @@ doRetrieve = function(req, res){
       } else {
         var message = "No documents with "+JSON.stringify(req.query)+ 
                       " in collection "+req.params.collection+" found.";
-        res.send(message);
+        res.send(modelData);
+        //res.send(message);
         //res.render('message', {title: 'Mongo Demo', obj: message});
       }
 		});
@@ -45,10 +47,10 @@ doRetrieve = function(req, res){
 //********* CRUD Update *******************************************************
 doUpdate = function(req, res){
   // if there is no filter to select documents to update, select all documents
-  console.log("Find: "+req.body.find);
+  console.log("req.body.find: "+req.body.find);
+  console.log("req.body.update: "+req.body.update);
   var filter = req.body.find ? JSON.parse(req.body.find) : {};
   console.log("Filter: "+filter);
-  console.log("Update without parse: "+req.body.update);
   // if there no update operation defined, render an error page.
   if (!req.body.update) {
     res.send('No Update Operation Defined');

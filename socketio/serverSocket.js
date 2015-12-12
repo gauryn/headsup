@@ -1,5 +1,7 @@
 var timer = require('../models/countdownTimer.js');
 var s = require('../models/scores.js');
+var http = require('http');
+var mr = require('../routes/dbRoutes.js');
 
 exports.init = function(io){
 
@@ -67,14 +69,14 @@ exports.init = function(io){
 		//4. game over: called by timer
 		//send player name, score, remaining time, number of correct/ wrong, time reamining, highest score for that category & db updates
 		socket.on('endGame', function(){
+			gameOver = true;
 			endGame();
 		})
 		function endGame(){
 			//find highest score
-			var url = "/topScores?category="+category;
-			$.get(url, function(data){
-				console.log("Data: "+data);
-			})
+			var url = "/topScores?category="+category.name;
+			console.log("Url: "+url);
+
 			//number of correct/ wrong
 			numRight = totalScore/s.scoreSuccess;
 			numWrong = category.cards.length - numRight;

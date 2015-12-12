@@ -110,20 +110,55 @@ socket.on('connect', function(){
 	
 	//end game
 	socket.on('gameOver', function(data){
+		var msg = "";
 		console.log("Game Over");
 		//hide pass, got it, card title buttons
 		$('#cardPass').hide();
 		$('#cardSuccess').hide();
 		$('#cardTitle').hide();
+		$('#endGameBtn').hide();
 		$('#gameOver').show();
-		//update game over details
-		var msg = "";
-		msg+= "Player Name: "+data.playerName+"<br>"+
-		      "Category: "+data.category.name+"<br>"+
-			  "Number Guessed: "+data.numRight+"<br>"+
-			  "Number Missed: "+data.numWrong +"<br>";
-		$('#gameOverDetails').html("");//clear old values
-		$('#gameOverDetails').append(msg);
+		//top Scores updates
+		var url = "/topScores?category="+data.category.name;
+		console.log("Url: "+url);
+		$.get(url, function(response){
+			//create new entry for category
+			if(response.length==0 && data.totalScore>0){
+				$.ajax({
+				  method: "PUT",
+				  url: '/topScores',
+				  data: 'category='+data.category.name+'&playerName='+data.playerName+'&score='+data.totalScore,
+				  success: function(res){
+					console.log("New High Score!");
+					msg+= "New High Score<br>";
+				  }
+				})
+			}
+			else if(response[0].score < data.totalScore){
+				//update db with topScore
+				var query = 'find={"category":"'+data.category.name+'"}&update={"$set":{"score":'+data.totalScore+', "playerName":"'+data.playerName+'"}}';
+				$.ajax({
+					method: "POST",
+					url: '/topScores',
+					data: query,
+					success: function(res){
+						console.log("New High Score for Category: "+data.category.name + "of "+data.totalScore);
+						msg+="New High Score!<br>"
+					}
+				})
+			}
+			else if(response[0].score >= data.totalScore){
+				msg+="Didn't beat current high score: "+response[0].score+"<br>";
+			}
+			
+			//update game over details
+			msg+= "Player Name: "+data.playerName+"<br>"+
+			      "Category: "+data.category.name+"<br>"+
+				  "Number Guessed: "+data.numRight+"<br>"+
+				  "Number Missed: "+data.numWrong +"<br>";
+			$('#gameOverDetails').html("");//clear old values
+			$('#gameOverDetails').append(msg);
+		})
 
 	});
 
