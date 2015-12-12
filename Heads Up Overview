@@ -1,0 +1,24 @@
+Heads Up:
+
+FIRST ITERATION
+- Single Player Mode: 
+1. Enter portal
+2. Select Category
+3. Start Game ==> Start Timer
+	Pass/ Fail: did not identify card, score = 0
+	Success: identified card, score = 10
+4. End of Game: either finished all 9 cards or past timer
+
+Socket: 
+- server-side: connect, emit cards and scores, reads db, tracks state of game: category, score, player name
+- client-side: connect, request for cards, pass/ success
+
+Models:
+- Player: player name
+- Category: categoryList, getCategory [player], add/update/deleteCategory [admin - future]
+- Score: pass, success, total
+- Game: current connection -> track score, write into db if higher score, display scores to player, restart game
+- DB: list of category, player name, highest score
+
+SECOND ITERATION
+Multi Player Mode: TBD

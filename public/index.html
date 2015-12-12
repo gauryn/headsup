@@ -1,0 +1,36 @@
+<html>
+<head>
+	<title>Heads Up!</title>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script type="text/javascript" src='js/index.js'></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="/js/clientSocket.js"></script>
+
+</head>
+<body>
+	<form>
+		Player Name: <input type='text' id='newPlayerName'>
+		<input type='submit' value = 'Submit Player Name' id='newPlayer'>
+		<p id='welcomePlayer'></p>
+		<input type='submit' value = 'Get Categories' id='getCategory'>
+		<p id = 'listCategory'></p>
+		Select Category: <input type='text' id='selectCategory'>
+		<input type='submit' value = 'Submit Category' id='submitCategory'>
+		<br>
+		<input type='submit' value='Start Game' id='startGameBtn'>
+	</form>
+	<div id='gameDetails'>
+		<h5 id='countdownTimer'></h5>
+		<h5 id='scoreTracker'></h5>
+		<h4 id='gameOver'>Game Over!</h4>
+		<h5 id='gameOverDetails'></h5>
+	</div>
+	<div id="cardDisplay">
+		<h6 id='cardTitle'></h6>
+		<input type='submit' value='Pass' id='cardPass'>
+		<input type='submit' value='Got It!' id='cardSuccess'>
+	</div>
+</body>
+
+</html>

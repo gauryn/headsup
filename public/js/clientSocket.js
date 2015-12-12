@@ -1,0 +1,124 @@
+$(function() {});
+
+var socket = io.connect();
+
+socket.on('connect', function(){
+
+	// add new player
+	$('#newPlayer').click(function(){
+		var url = '/player/'+$('#newPlayerName').val();
+		$.post(url, function(data){
+			var msg = "Welcome "+data;
+			$('#welcomePlayer').text(msg);
+			socket.emit('newPlayer', {'playerName': data});
+			return false;
+		});
+		return false;
+	});
+
+	// get category
+	$('#getCategory').click(function(){
+		var url = '/category/';
+		$.get(url, function(data){
+			var msg = "";
+			for(var i=0; i<data.length; i++){
+				msg+= (i+1)+". "+data[i].name+"<br>";
+			};
+			$('#listCategory').html("");
+			$('#listCategory').append(msg);
+			return false;
+		});
+		return false;
+	});
+
+	// select category
+	$('#submitCategory').click(function(){
+		var url = '/category/'+$('#selectCategory').val();
+		$.get(url, function(data){
+			var msg = "Category: "+data.name;
+			$('#gameCategory').text(msg);
+			socket.emit('selectCategory', {'category': data});
+			//hide submit button
+			$('#submitCategory').hide();
+			//show game start
+			$('#startGameBtn').show();
+			return false;
+		});
+		return false;
+	});
+
+	// start game
+	$('#startGameBtn').click(function(){
+		socket.emit('startGame');
+		$('#startGameBtn').hide();
+		$('#countdownTimer').show();
+		$('#cardPass').show();
+		$('#cardSuccess').show();
+		//game score info: update score display
+		$('#scoreTracker').html("Score: 0");
+		return false;
+	});
+
+	// game time info
+	socket.on('timeRemaining', function(data){
+		var min = data.min < 10 ? '0'+data.min : data.min;
+		var sec = data.sec < 10 ? '0'+data.sec : data.sec;
+		console.log("Remaining Time: "+min+":"+sec);
+		$('#countdownTimer').html("");//clear previous times
+		$('#countdownTimer').text("Remaining Time: "+min+":"+sec);
+	});
+
+	var index = 0; //card index in category
+
+	// display card
+	socket.on('cardDisplay', function(data){
+		index = data.index;
+		var title = data.category.cards[data.index];
+		console.log("Card title: "+title);
+		$('#cardTitle').html("");//clear old card
+		$('#cardTitle').text(title);
+	});
+
+	//guess the card
+	//desktop version: click
+	$('#cardPass').click(function(){
+		var status = 'pass';
+		emitCardStatus(status);
+
+	});
+	$('#cardSuccess').click(function(){
+		var status = 'success';
+		emitCardStatus(status);
+	});	
+	function emitCardStatus(status){
+		var url = '/score/'+status;
+		console.log("Url: "+url);
+		$.get(url, function(data){
+			socket.emit('scoreStatus', {'totalScore': parseInt(data)});
+			$('#scoreTracker').html("");
+			$('#scoreTracker').text("Score: "+data);
+		});
+		socket.emit('cardStatus', {'index': index});
+		return false;
+	}
+	
+	//end game
+	socket.on('gameOver', function(data){
+		console.log("Game Over");
+		//hide pass, got it, card title buttons
+		$('#cardPass').hide();
+		$('#cardSuccess').hide();
+		$('#cardTitle').hide();
+		$('#gameOver').show();
+		//update game over details
+		var msg = "";
+		msg+= "Player Name: "+data.playerName+"<br>"+
+		      "Category: "+data.category.name+"<br>"+
+			  "Number Guessed: "+data.numRight+"<br>"+
+			  "Number Missed: "+data.numWrong +"<br>";
+		$('#gameOverDetails').html("");//clear old values
+		$('#gameOverDetails').append(msg);
+
+	});
+
+});
