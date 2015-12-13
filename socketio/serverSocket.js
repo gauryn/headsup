@@ -5,8 +5,16 @@ var mr = require('../routes/dbRoutes.js');
 
 exports.init = function(io){
 
+	//number of players
+	var currentPlayers = 0;
+
 	//new connection is initiated
 	io.sockets.on('connection', function (socket){
+		++ currentPlayers; //increase number of players
+		//let everyone know about players
+		socket.emit('players', {number: currentPlayers});
+		socket.broadcast.emit('players', {number: currentPlayers});
+
 		//category selected for each game
 		var category;
 		var totalScore = 0;
@@ -67,27 +75,26 @@ exports.init = function(io){
 		}
 
 		//4. game over: called by timer
-		//send player name, score, remaining time, number of correct/ wrong, time reamining, highest score for that category & db updates
+		//send player name, score, remaining time, number of correct/ wrong, time reamining
+		//broadcast that to all players and stop all sessions
 		socket.on('endGame', function(){
 			gameOver = true;
 			endGame();
 		})
-		function endGame(){
-			//find highest score
-			var url = "/topScores?category="+category.name;
-			console.log("Url: "+url);
 
+		function endGame(){
 			//number of correct/ wrong
 			numRight = totalScore/s.scoreSuccess;
 			numWrong = category.cards.length - numRight;
 			//pass all game details to client for views
 			socket.emit('gameOver', {'playerName': playerName, 'totalScore': totalScore, 'numRight': numRight, 'numWrong': numWrong, 'category': category,  'remainingTime': remainingTime});
-			//'highestScorePlayerName': highestScorePlayerName,
-			//'highestScore': highestScore,			
+			console.log("Reached here");
+			socket.broadcast.emit('gameOver', {'playerName': playerName, 'totalScore': totalScore, 'numRight': numRight, 'numWrong': numWrong, 'category': category,  'remainingTime': remainingTime});
 		}
 
 		socket.on('disconnect', function(){
-
+			--currentPlayers;
+			socket.broadcast.emit('players', { number: currentPlayers});
 		});
 	})
 }
