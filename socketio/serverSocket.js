@@ -33,8 +33,7 @@ exports.init = function(io){
 
 		//2. select category
 		socket.on('selectCategory', function(data){
-			category = data.categ
-			ory;
+			category = data.category;
 			console.log("Category: "+category.name);
 		});
 

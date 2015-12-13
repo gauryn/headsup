@@ -6,7 +6,7 @@ var socket = io.connect();
 socket.on('connect', function(){
 
 	socket.on('players', function(data){
-		console.log("Num of players: "+data.currentPlayers);
+		console.log("Num of players: "+data.number);
 	})
 
 	// add new player
