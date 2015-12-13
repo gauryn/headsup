@@ -122,7 +122,7 @@ socket.on('connect', function(){
 		if( $('#newPlayerName').val() != data.playerName){
 			msg+="Another player won. H a h a <br>";
 		}
-		else{
+		else if ( $('#newPlayerName').val() == data.playerName){
 			//session Storage: save game category & Scores for today if won
 			var hist = window.sessionStorage.getItem('gameHistory');
 			hist+= "Category: "+data.category.name+" | Score: "+data.totalScore+"\n";

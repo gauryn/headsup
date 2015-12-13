@@ -8,6 +8,7 @@ $(document).ready(function(){
 
 	$('#gameSessionBtn').on('click tap', function(){
 		var msg = window.sessionStorage.getItem('gameHistory')
+		if(msg == ""){msg="No wins yet";}
 		$('#gameSessionDetails').append(msg);
 	})
 });
