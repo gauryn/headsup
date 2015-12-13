@@ -1,6 +1,7 @@
 $(function() {});
 
-var socket = io.connect('http://headsup-67328gauryn.rhcloud.com:8000');
+//var socket = io.connect('http://headsup-67328gauryn.rhcloud.com:8000');
+var socket = io.connect();
 
 socket.on('connect', function(){
 
