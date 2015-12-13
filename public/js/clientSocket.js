@@ -10,7 +10,7 @@ socket.on('connect', function(){
 	})
 
 	// add new player
-	$('#newPlayer').click(function(){
+	$('#newPlayer').on('click tap', function(){
 		var url = '/player/'+$('#newPlayerName').val();
 		$.post(url, function(data){
 			var msg = "Welcome "+data;
@@ -22,7 +22,7 @@ socket.on('connect', function(){
 	});
 
 	// get category
-	$('#getCategory').click(function(){
+	$('#getCategory').on('click tap', function(){
 		var url = '/category/';
 		$.get(url, function(data){
 			var msg = "";
@@ -37,7 +37,7 @@ socket.on('connect', function(){
 	});
 
 	// select category
-	$('#submitCategory').click(function(){
+	$('#submitCategory').on('click tap', function(){
 		var url = '/category/'+$('#selectCategory').val();
 		$.get(url, function(data){
 			var msg = "Category: "+data.name;
@@ -53,7 +53,7 @@ socket.on('connect', function(){
 	});
 
 	// start game
-	$('#startGameBtn').click(function(){
+	$('#startGameBtn').on('click tap', function(){
 		socket.emit('startGame');
 		$('#startGameBtn').hide();
 		$('#countdownTimer').show();
@@ -86,12 +86,12 @@ socket.on('connect', function(){
 	});
 
 	//guess the card
-	//desktop version: click
-	$('#cardPass').click(function(){
+	//desktop version: click. mobile version: tap
+	$('#cardPass').on('click, tap', function(){
 		var status = 'pass';
 		emitCardStatus(status);
 	});
-	$('#cardSuccess').click(function(){
+	$('#cardSuccess').on('click tap', function(){
 		var status = 'success';
 		emitCardStatus(status);
 	});	
@@ -108,7 +108,7 @@ socket.on('connect', function(){
 	}
 
 	//end game button
-	$('#endGameBtn').on('click', function(){
+	$('#endGameBtn').on('click tap', function(){
 		socket.emit('endGame');
 	})
 	
