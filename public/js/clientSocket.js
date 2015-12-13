@@ -4,6 +4,10 @@ var socket = io.connect('http://headsup-67328gauryn.rhcloud.com:8000');
 
 socket.on('connect', function(){
 
+	socket.on('players', function(data){
+		console.log("Num of players: "+data.currentPlayers);
+	})
+
 	// add new player
 	$('#newPlayer').click(function(){
 		var url = '/player/'+$('#newPlayerName').val();
@@ -85,7 +89,6 @@ socket.on('connect', function(){
 	$('#cardPass').click(function(){
 		var status = 'pass';
 		emitCardStatus(status);
-
 	});
 	$('#cardSuccess').click(function(){
 		var status = 'success';
@@ -110,13 +113,18 @@ socket.on('connect', function(){
 	
 	//end game
 	socket.on('gameOver', function(data){
+
 		var msg = "";
+		if( $('#newPlayerName').val() != data.playerName){
+			msg+="Another player won. H a h a <br>";
+		}
 		console.log("Game Over");
 		//hide pass, got it, card title buttons
 		$('#cardPass').hide();
 		$('#cardSuccess').hide();
 		$('#cardTitle').hide();
 		$('#endGameBtn').hide();
+		$('#countdownTimer').hide();
 		$('#gameOver').show();
 		//top Scores updates
 		var url = "/topScores?category="+data.category.name;

@@ -47,8 +47,6 @@ doRetrieve = function(req, res){
 //********* CRUD Update *******************************************************
 doUpdate = function(req, res){
   // if there is no filter to select documents to update, select all documents
-  console.log("req.body.find: "+req.body.find);
-  console.log("req.body.update: "+req.body.update);
   var filter = req.body.find ? JSON.parse(req.body.find) : {};
   console.log("Filter: "+filter);
   // if there no update operation defined, render an error page.
