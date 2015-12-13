@@ -5,4 +5,9 @@ $(document).ready(function(){
 	$('#cardSuccess').hide();
 	$('#gameOver').hide();
 	$('#endGameBtn').hide();
+
+	$('#gameSessionBtn').on('click tap', function(){
+		var msg = window.sessionStorage.getItem('gameHistory')
+		$('#gameSessionDetails').append(msg);
+	})
 });

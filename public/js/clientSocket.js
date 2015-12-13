@@ -5,6 +5,9 @@ var socket = io.connect();
 
 socket.on('connect', function(){
 
+	//new session: no game history
+	window.sessionStorage.setItem('gameHistory', []);
+
 	socket.on('players', function(data){
 		console.log("Num of players: "+data.number);
 	})
@@ -87,7 +90,7 @@ socket.on('connect', function(){
 
 	//guess the card
 	//desktop version: click. mobile version: tap
-	$('#cardPass').on('click, tap', function(){
+	$('#cardPass').on('click tap', function(){
 		var status = 'pass';
 		emitCardStatus(status);
 	});
@@ -118,6 +121,12 @@ socket.on('connect', function(){
 		var msg = "";
 		if( $('#newPlayerName').val() != data.playerName){
 			msg+="Another player won. H a h a <br>";
+		}
+		else{
+			//session Storage: save game category & Scores for today if won
+			var hist = window.sessionStorage.getItem('gameHistory');
+			hist+= "Category: "+data.category.name+" | Score: "+data.totalScore+"\n";
+			window.sessionStorage.setItem('gameHistory', hist);
 		}
 		console.log("Game Over");
 		//hide pass, got it, card title buttons
@@ -167,7 +176,9 @@ socket.on('connect', function(){
 				  "Number Missed: "+data.numWrong +"<br>";
 			$('#gameOverDetails').html("");//clear old values
 			$('#gameOverDetails').append(msg);
+
 		})
+
 
 	});
 

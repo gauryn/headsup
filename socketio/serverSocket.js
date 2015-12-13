@@ -23,8 +23,6 @@ exports.init = function(io){
 		var remainingTime;
 		var duration;
 
-		console.log("Received connection event");
-
 		//1. get player name
 		socket.on('newPlayer', function(data){
 			playerName = data.playerName;
@@ -88,7 +86,6 @@ exports.init = function(io){
 			numWrong = category.cards.length - numRight;
 			//pass all game details to client for views
 			socket.emit('gameOver', {'playerName': playerName, 'totalScore': totalScore, 'numRight': numRight, 'numWrong': numWrong, 'category': category,  'remainingTime': remainingTime});
-			console.log("Reached here");
 			socket.broadcast.emit('gameOver', {'playerName': playerName, 'totalScore': totalScore, 'numRight': numRight, 'numWrong': numWrong, 'category': category,  'remainingTime': remainingTime});
 		}
 
