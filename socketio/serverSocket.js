@@ -1,3 +1,8 @@
+var timer = require('../models/countdownTimer.js');
+var s = require('../models/scores.js');
+var http = require('http');
+var mr = require('../routes/dbRoutes.js');
+
 exports.init = function(io){
 
 	//number of players
@@ -5,12 +10,6 @@ exports.init = function(io){
 
 	//new connection is initiated
 	io.sockets.on('connection', function (socket){
-
-		var timer = require('../models/countdownTimer.js');
-		var s = require('../models/scores.js');
-		var http = require('http');
-		var mr = require('../routes/dbRoutes.js');
-
 		++ currentPlayers; //increase number of players
 		//let everyone know about players
 		socket.emit('players', {number: currentPlayers});
