@@ -1,13 +1,14 @@
 $(function() {});
 
 var socket = io.connect('http://headsup-67328gauryn.rhcloud.com:8000');
-//var socket = io.connect();
+//var socket = io.connect(); //for localhost
 
 socket.on('connect', function(){
 
-	//new session: no game history
+	//new session: game history
 	window.sessionStorage.setItem('gameHistory', []);
 
+	//new player joins game
 	socket.on('players', function(data){
 		console.log("Num of players: "+data.number);
 	})
@@ -24,7 +25,7 @@ socket.on('connect', function(){
 		return false;
 	});
 
-	// get category
+	// list all categories
 	$('#getCategory').on('click tap', function(){
 		var url = '/category/';
 		$.get(url, function(data){
@@ -58,6 +59,7 @@ socket.on('connect', function(){
 	// start game
 	$('#startGameBtn').on('click tap', function(){
 		socket.emit('startGame');
+		//toggle buttons 
 		$('#startGameBtn').hide();
 		$('#countdownTimer').show();
 		$('#cardPass').show();
@@ -77,7 +79,7 @@ socket.on('connect', function(){
 		$('#countdownTimer').text("Remaining Time: "+min+":"+sec);
 	});
 
-	var index = 0; //card index in category
+	var index = 0; //initial card index in category
 
 	// display card
 	socket.on('cardDisplay', function(data){
@@ -102,6 +104,7 @@ socket.on('connect', function(){
 		var url = '/score/'+status;
 		console.log("Url: "+url);
 		$.get(url, function(data){
+			//update scores based on card status
 			socket.emit('scoreStatus', {'totalScore': parseInt(data)});
 			$('#scoreTracker').html("");
 			$('#scoreTracker').text("Score: "+data);
@@ -119,9 +122,11 @@ socket.on('connect', function(){
 	socket.on('gameOver', function(data){
 
 		var msg = "";
+		// multi-player mode: another player won ==> game over for all other players
 		if( $('#newPlayerName').val() != data.playerName){
 			msg+="Another player won. H a h a <br>";
 		}
+		// multi-player mode: current player won 
 		else if ( $('#newPlayerName').val() == data.playerName){
 			//session Storage: save game category & Scores for today if won
 			var hist = window.sessionStorage.getItem('gameHistory');
@@ -136,11 +141,11 @@ socket.on('connect', function(){
 		$('#endGameBtn').hide();
 		$('#countdownTimer').hide();
 		$('#gameOver').show();
-		//top Scores updates
+		//top Scores updates: find high score for category in db and compare with total score in current game
 		var url = "/topScores?category="+data.category.name;
 		console.log("Url: "+url);
 		$.get(url, function(response){
-			//create new entry for category
+			//create new entry for category if no high score for given category exists
 			if(response.length==0 && data.totalScore>0){
 				$.ajax({
 				  method: "PUT",
@@ -152,6 +157,7 @@ socket.on('connect', function(){
 				  }
 				})
 			}
+			//update DB with high Score for current cateogry if game total > high score in DB
 			else if(response[0].score < data.totalScore){
 				//update db with topScore
 				var query = 'find={"category":"'+data.category.name+'"}&update={"$set":{"score":'+data.totalScore+', "playerName":"'+data.playerName+'"}}';
@@ -165,6 +171,7 @@ socket.on('connect', function(){
 					}
 				})
 			}
+			//high score > current game score. Hence, no updates to DB
 			else if(response[0].score >= data.totalScore){
 				msg+="Didn't beat current high score: "+response[0].score+"<br>";
 			}

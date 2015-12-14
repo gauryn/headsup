@@ -1,3 +1,22 @@
+<!--
+	Name: Gaury Nagaraju
+	AndrewID: gauryn
+	Openshift URL: headsup-67328gauryn.rhcloud.com
+	Date: 14th December, 2015
+
+	Game Details: 
+	- Single-player:
+	1. Enter portal
+	2. Select Category
+	3. Start Game ==> Start Timer
+		Pass/ Fail: did not identify card, score = 0
+		Success: identified card, score = 10
+	4. End of Game: either finished all 9 cards or past timer
+	- Multi-player:
+	1. All players enter portal
+	2. Click on start game button at the same time
+	3. As soon as a player goes through all the cards, game ends for all players.
+-->
 <html>
 <head>
 	<title>Heads Up!</title>
@@ -10,29 +29,36 @@
 </head>
 <body>
 	<form>
+		<!-- Player Info -->
 		Player Name: <input type='text' id='newPlayerName'>
 		<input type='submit' value = 'Submit Player Name' id='newPlayer'>
 		<p id='welcomePlayer'></p>
+		<!-- Category details -->
 		<input type='submit' value = 'Get Categories' id='getCategory'>
 		<p id = 'listCategory'></p>
 		Select Category: <input type='text' id='selectCategory'>
 		<input type='submit' value = 'Submit Category' id='submitCategory'>
 		<br>
+		<!-- Game Details -->
 		<input type='submit' value='Start Game' id='startGameBtn'>
 	</form>
+	<!-- Game Details once game starts -->
 	<div id='gameDetails'>
 		<h5 id='countdownTimer'></h5>
 		<h5 id='scoreTracker'></h5>
 		<h4 id='gameOver'>Game Over!</h4>
 		<h5 id='gameOverDetails'></h5>
 	</div>
+	<!-- Card details -->
 	<div id="cardDisplay">
 		<h6 id='cardTitle'></h6>
 		<input type='submit' value='Pass' id='cardPass'>
 		<input type='submit' value='Got It!' id='cardSuccess'>
 	</div>
+	<!-- End Game before guessing all rounds -->
 	<input type='submit' value='End Game' id='endGameBtn'>
 	<br>
+	<!-- Show game history for current session -->
 	<input type='submit' value='Show Winning Games History for current session' id='gameSessionBtn'>
 	<div id='gameSessionDetails'></div>
 </body>

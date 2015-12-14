@@ -21,4 +21,5 @@ Models:
 - DB: list of category, player name, highest score
 
 SECOND ITERATION
-Multi Player Mode: TBD
+Multi Player Mode
+Session Storage

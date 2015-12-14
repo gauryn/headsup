@@ -15,7 +15,7 @@ exports.init = function(io){
 		socket.emit('players', {number: currentPlayers});
 		socket.broadcast.emit('players', {number: currentPlayers});
 
-		//category selected for each game
+		//Game Details
 		var category;
 		var totalScore = 0;
 		var playerName = "";
@@ -55,6 +55,7 @@ exports.init = function(io){
 				socket.emit('cardDisplay', {'category': category, 'index': i});	
 			}
 			else{
+				//reached end of all cards
 				gameOver = true;
 			}
 		});
