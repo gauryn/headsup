@@ -1,9 +1,9 @@
-var timer = require('../models/countdownTimer.js');
-var s = require('../models/scores.js');
-var http = require('http');
-var mr = require('../routes/dbRoutes.js');
-
 exports.init = function(io){
+
+	var timer = require('../models/countdownTimer.js');
+	var s = require('../models/scores.js');
+	var http = require('http');
+	var mr = require('../routes/dbRoutes.js');
 
 	//number of players
 	var currentPlayers = 0;
